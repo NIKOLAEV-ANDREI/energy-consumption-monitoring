@@ -22,53 +22,7 @@
 - **База данных**: MySQL 8.0+
 - **Сервер**: Apache Tomcat 9.0+
 
-## Структура проекта
 
-```
-java-project/
-├── database/
-│   └── schema.sql              # Схема базы данных
-├── src/main/
-│   ├── java/com/energy/
-│   │   ├── dao/                # Data Access Objects
-│   │   ├── filter/             # Фильтры сервлетов
-│   │   ├── model/              # Модели данных
-│   │   ├── servlet/            # Сервлеты (API)
-│   │   └── util/               # Утилиты
-│   └── webapp/
-│       ├── css/                # Стили
-│       ├── js/                 # JavaScript
-│       ├── WEB-INF/
-│       │   └── web.xml         # Конфигурация
-│       └── index.html          # Главная страница
-├── docs/
-│   ├── INSTALLATION.md         # Инструкция по установке
-│   └── USER_MANUAL.md          # Руководство пользователя
-└── README.md
-```
-
-## Быстрый старт
-
-1. Установите JDK 11+, MySQL 8.0+, Apache Tomcat 9.0+
-2. Создайте базу данных и выполните `database/schema.sql`
-3. Настройте подключение в `DatabaseConnection.java`
-4. Скомпилируйте и разверните WAR-файл на Tomcat
-5. Откройте http://localhost:8080/energy-analysis/
-
-Подробная инструкция: [docs/INSTALLATION.md](docs/INSTALLATION.md)
-
-## Тестовый аккаунт
-
-- **Логин**: demo
-- **Пароль**: test123
-
-## Лицензия
-
-MIT License
-
-## Автор
-
-Система создана для анализа и оптимизации энергопотребления в жилых помещениях.
 
 
 
