@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система анализа энергопотребления квартиры</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Экран загрузки -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loader">
+            <div class="loader-icon">⚡</div>
+            <div class="loader-text">Загрузка...</div>
+        </div>
+    </div>
+
+    <!-- Страница авторизации -->
+    <div id="auth-page" class="page auth-page hidden">
+        <div class="auth-container">
+            <div class="auth-header">
+                <div class="logo">⚡</div>
+                <h1>ЭнергоАнализ</h1>
+                <p>Система анализа энергопотребления квартиры</p>
+            </div>
+            
+            <!-- Форма входа -->
+            <div id="login-form" class="auth-form">
+                <h2>Вход в систему</h2>
+                <div class="form-group">
+                    <label for="login-username">Имя пользователя или Email</label>
+                    <input type="text" id="login-username" placeholder="Введите логин или email">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Пароль</label>
+                    <input type="password" id="login-password" placeholder="Введите пароль">
+                </div>
+                <button type="button" id="login-btn" class="btn btn-primary btn-block">Войти</button>
+                <p class="auth-switch">Нет аккаунта? <a href="#" id="show-register">Зарегистрироваться</a></p>
+            </div>
+            
+            <!-- Форма регистрации -->
+            <div id="register-form" class="auth-form hidden">
+                <h2>Регистрация</h2>
+                <div class="form-group">
+                    <label for="register-username">Имя пользователя</label>
+                    <input type="text" id="register-username" placeholder="Минимум 3 символа">
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" placeholder="example@mail.ru">
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Пароль</label>
+                    <input type="password" id="register-password" placeholder="Минимум 6 символов">
+                </div>
+                <div class="form-group">
+                    <label for="register-confirm">Подтверждение пароля</label>
+                    <input type="password" id="register-confirm" placeholder="Повторите пароль">
+                </div>
+                <button type="button" id="register-btn" class="btn btn-primary btn-block">Зарегистрироваться</button>
+                <p class="auth-switch">Уже есть аккаунт? <a href="#" id="show-login">Войти</a></p>
+            </div>
+            
+            <div id="auth-error" class="error-message hidden"></div>
+        </div>
+    </div>
+
+    <!-- Главная страница приложения -->
+    <div id="app-page" class="page hidden">
+        <!-- Боковая панель -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">⚡</div>
+                <span class="logo-text">ЭнергоАнализ</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Панель управления</span>
+                </a>
+                <a href="#" class="nav-item" data-section="appliances">
+                    <span class="nav-icon">🔌</span>
+                    <span class="nav-text">Приборы</span>
+                </a>
+                <a href="#" class="nav-item" data-section="groups">
+                    <span class="nav-icon">📁</span>
+                    <span class="nav-text">Группы</span>
+                </a>
+                <a href="#" class="nav-item" data-section="tariffs">
+                    <span class="nav-icon">💰</span>
+                    <span class="nav-text">Тарифы</span>
+                </a>
+                <a href="#" class="nav-item" data-section="recommendations">
+                    <span class="nav-icon">💡</span>
+                    <span class="nav-text">Рекомендации</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <span class="user-icon">👤</span>
+                    <span id="user-name" class="user-name">Пользователь</span>
+                </div>
+                <button id="logout-btn" class="btn btn-logout">Выйти</button>
+            </div>
+        </aside>
+
+        <!-- Основной контент -->
+        <main class="main-content">
+            <!-- Панель управления -->
+            <section id="dashboard-section" class="section">
+                <div class="section-header">
+                    <h1>Панель управления</h1>
+                    <div class="current-tariff" id="current-tariff-info"></div>
+                </div>
+                
+                <!-- Карточки статистики -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">⚡</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="daily-kwh">0</span>
+                            <span class="stat-label">кВт·ч / день</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📅</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="monthly-kwh">0</span>
+                            <span class="stat-label">кВт·ч / месяц</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💵</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="daily-cost">0</span>
+                            <span class="stat-label">руб. / день</span>
+                        </div>
+                    </div>
+                    <div class="stat-card accent">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="monthly-cost">0</span>
+                            <span class="stat-label">руб. / месяц</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Графики и информация -->
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Топ потребителей</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="top-consumers" class="top-consumers-list"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Потребление по группам</h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="groups-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Прогноз на месяц</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="forecast-info" class="forecast-info"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Раздел приборов -->
+            <section id="appliances-section" class="section hidden">
+                <div class="section-header">
+                    <h1>Электроприборы</h1>
+                    <button id="add-appliance-btn" class="btn btn-primary">+ Добавить прибор</button>
+                </div>
+                
+                <div class="filter-bar">
+                    <select id="filter-group" class="select-input">
+                        <option value="">Все группы</option>
+                    </select>
+                    <input type="text" id="search-appliance" class="search-input" placeholder="Поиск прибора...">
+                </div>
+                
+                <div id="appliances-grid" class="appliances-grid"></div>
+            </section>
+
+            <!-- Раздел групп -->
+            <section id="groups-section" class="section hidden">
+                <div class="section-header">
+                    <h1>Группы приборов</h1>
+                    <button id="add-group-btn" class="btn btn-primary">+ Создать группу</button>
+                </div>
+                
+                <div id="groups-grid" class="groups-grid"></div>
+            </section>
+
+            <!-- Раздел тарифов -->
+            <section id="tariffs-section" class="section hidden">
+                <div class="section-header">
+                    <h1>Тарифы на электроэнергию</h1>
+                    <button id="add-tariff-btn" class="btn btn-primary">+ Добавить тариф</button>
+                </div>
+                
+                <div class="tariff-info-card">
+                    <h3>Многозонные тарифы</h3>
+                    <p>Настройте тарифы для разных временных зон: пиковые часы, ночное время и полупик.</p>
+                    <div class="tariff-zones">
+                        <div class="zone peak">
+                            <span class="zone-name">Пик</span>
+                            <span class="zone-time">07:00-10:00, 17:00-21:00</span>
+                        </div>
+                        <div class="zone shoulder">
+                            <span class="zone-name">Полупик</span>
+                            <span class="zone-time">10:00-17:00, 21:00-23:00</span>
+                        </div>
+                        <div class="zone night">
+                            <span class="zone-name">Ночь</span>
+                            <span class="zone-time">23:00-07:00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="tariffs-list" class="tariffs-list"></div>
+            </section>
+
+            <!-- Раздел рекомендаций -->
+            <section id="recommendations-section" class="section hidden">
+                <div class="section-header">
+                    <h1>Советы по энергосбережению</h1>
+                </div>
+                
+                <div class="recommendations-list">
+                    <div class="recommendation-card medium">
+                        <div class="recommendation-icon">💡</div>
+                        <div class="recommendation-content">
+                            <div class="recommendation-title">Освещение</div>
+                            <div class="recommendation-message">Замените лампы накаливания на LED. Экономия до 80% электроэнергии. LED-лампа 10 Вт даёт столько же света, сколько лампа накаливания 75 Вт.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="recommendation-card low">
+                        <div class="recommendation-icon">🔌</div>
+                        <div class="recommendation-content">
+                            <div class="recommendation-title">Режим ожидания</div>
+                            <div class="recommendation-message">Отключайте приборы от сети, когда не используете. Режим ожидания потребляет до 10% от общего энергопотребления. Используйте удлинители с выключателем.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="recommendation-card medium">
+                        <div class="recommendation-icon">❄️</div>
+                        <div class="recommendation-content">
+                            <div class="recommendation-title">Холодильник</div>
+                            <div class="recommendation-message">Не ставьте холодильник рядом с плитой или батареей. Регулярно размораживайте. Не ставьте горячую еду — это увеличивает расход энергии на 20%.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="recommendation-card medium">
+                        <div class="recommendation-icon">👕</div>
+                        <div class="recommendation-content">
+                            <div class="recommendation-title">Стиральная машина</div>
+                            <div class="recommendation-message">Стирайте при полной загрузке. Режим 30-40°C вместо 60°C экономит до 50% энергии. Запускайте стирку в ночное время по льготному тарифу.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="recommendation-card high">
+                        <div class="recommendation-icon">🌡️</div>
+                        <div class="recommendation-content">
+                            <div class="recommendation-title">Кондиционер</div>
+                            <div class="recommendation-message">Устанавливайте температуру не ниже 24°C. Каждый градус ниже увеличивает расход на 5-8%. Регулярно чистите фильтры. Закрывайте окна при работе.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="recommendation-card high">
+                        <div class="recommendation-icon">🔥</div>
+                        <div class="recommendation-content">
+                            <div class="recommendation-title">Электрообогреватели</div>
+                            <div class="recommendation-message">Обогреватели — одни из самых энергозатратных приборов. Утеплите окна и двери. Используйте только в одной комнате. Выключайте при выходе.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="recommendation-card low">
+                        <div class="recommendation-icon">☕</div>
+                        <div class="recommendation-content">
+                            <div class="recommendation-title">Электрочайник</div>
+                            <div class="recommendation-message">Кипятите только нужное количество воды. Очищайте чайник от накипи — она увеличивает расход на 15-20%.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="recommendation-card low">
+                        <div class="recommendation-icon">💻</div>
+                        <div class="recommendation-content">
+                            <div class="recommendation-title">Компьютер</div>
+                            <div class="recommendation-message">Используйте режим энергосбережения. Выключайте монитор при перерывах более 10 минут. Ноутбук потребляет в 3-4 раза меньше настольного ПК.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="recommendation-card medium">
+                        <div class="recommendation-icon">🍽️</div>
+                        <div class="recommendation-content">
+                            <div class="recommendation-title">Посудомоечная машина</div>
+                            <div class="recommendation-message">Запускайте при полной загрузке. Используйте эко-режим. Откажитесь от сушки — дайте посуде высохнуть естественно.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="recommendation-card low">
+                        <div class="recommendation-icon">📺</div>
+                        <div class="recommendation-content">
+                            <div class="recommendation-title">Телевизор</div>
+                            <div class="recommendation-message">Уменьшите яркость экрана — заводские настройки часто завышены. Используйте таймер автовыключения. Выключайте полностью, а не в режим ожидания.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="recommendation-card medium">
+                        <div class="recommendation-icon">🏷️</div>
+                        <div class="recommendation-content">
+                            <div class="recommendation-title">Класс энергоэффективности</div>
+                            <div class="recommendation-message">При покупке техники выбирайте класс A++ или A+++. Разница в потреблении между классом A и D достигает 50%. Окупится за 2-3 года.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="recommendation-card low">
+                        <div class="recommendation-icon">☀️</div>
+                        <div class="recommendation-content">
+                            <div class="recommendation-title">Естественное освещение</div>
+                            <div class="recommendation-message">Максимально используйте дневной свет. Держите окна чистыми. Используйте светлые шторы. Не загораживайте окна мебелью.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Модальные окна -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div id="modal" class="modal">
+            <div class="modal-header">
+                <h2 id="modal-title">Заголовок</h2>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div id="modal-body" class="modal-body"></div>
+            <div id="modal-footer" class="modal-footer"></div>
+        </div>
+    </div>
+
+    <!-- Уведомления -->
+    <div id="notifications" class="notifications"></div>
+
+    <!-- Скрипты -->
+    <script src="js/api.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
+
+
